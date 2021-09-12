@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.signin_main {
+  height: 90vh;
+  width: 100%;
+  background-color: rgb(237, 237, 237);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.signin_container {
+  height: 85%;
+  width: 75%;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  display: flex;
+}
+.signin {
+  height: 100%;
+  width: 40%;
+  background-color: #efefef;
+  padding: 5%;
+}
+.signin i {
+  position: absolute;
+  margin-top: 55px;
+  margin-left: 4px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+.signin_top p {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  font-weight: bold;
+}
+.signin_top h2 {
+  margin-top: -10px;
+  color: #3f51b5;
+}
+.signup_top {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.signup_top p {
+  font-size: 0.8rem;
+}
+.signup_top h2 {
+  margin-top: -10px;
+}
+.input_signin {
+  width: 230px;
+  outline: none;
+  border: none;
+  background-color: unset;
+  border-bottom: 1px solid gray;
+  padding-left: 9%;
+  padding-bottom: 3px;
+  font-size: 0.9rem;
+  margin-top: 50px;
+}
+.input_signin:active {
+  border: none;
+  border-bottom: 1px solid gray;
+}
+.final_signin_button {
+  position: absolute;
+  margin-top: 50px;
+}
+.signup {
+  height: 100%;
+  width: 60%;
+  background-color: #5e17eb;
+  background-image: url("../images/signup.png");
+  background-size: 100% 100%;
+  padding: 5%;
+  color: #fff;
+}
+
+.signup i {
+  position: absolute;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-left: 20px;
+  margin-top: 55px;
+}
+.input_signup {
+  width: 220px;
+  outline: none;
+  border: none;
+  background-color: unset;
+  border-bottom: 1px solid rgb(232, 223, 223);
+  padding-left: 5%;
+  padding-bottom: 5px;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-left: 15px;
+  margin-top: 50px;
+}
+.input_signup:active {
+  border: none;
+  border-bottom: 1px solid rgb(232, 223, 223);
+}
+.signup_button {
+  position: absolute;
+  margin-top: 40px;
+  margin-left: 20px;
+}
+@media screen and (max-width: 600px) {
+  .signin_container {
+    width: 100%;
+    display: block;
+  }
+  .signup_top {
+    margin-top: 40px;
+  }
+  .signin {
+    width: 100%;
+    height: 100vw;
+  }
+  .signup {
+    width: 100%;
+    height: 120vw;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .signup i {
+    display: none;
+  }
+  .input_signup {
+    margin-top: 20px;
+    padding-left: 10px;
+  }
+}
