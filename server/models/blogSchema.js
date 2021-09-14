@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const blogsSchema = new mongoose.Schema({
+const blogSchema = new mongoose.Schema({
   blogTitle: {
     type: String,
     required: true,
@@ -24,6 +24,6 @@ const blogsSchema = new mongoose.Schema({
   },
 });
 
-const blogs = mongoose.model("blogs", blogsSchema, "blogs");
+const Blog = mongoose.model("blog", blogSchema);
 
-module.exports = blogs;
+module.exports = Blog;

@@ -22,9 +22,9 @@ const NavTop = () => {
     <div>
       <div className="navbar_main">
         <Navbar className="p-2 navbar_in">
-          <NavbarBrand className="web_logo">
+          <div className="web_logo">
             <Link to="/">Mini Blogs </Link>
-          </NavbarBrand>
+          </div>
 
           <Link to="/signin">
             <Button size="sm" color="primary" className="signin_button">

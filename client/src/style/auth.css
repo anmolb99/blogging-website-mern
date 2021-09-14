@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
 }
-.signin_main {
+.auth_main {
   height: 90vh;
   width: 100%;
   background-color: rgb(237, 237, 237);
@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
 }
-.signin_container {
+.auth_container {
   height: 85%;
   width: 75%;
   background-color: #fff;
@@ -107,8 +107,8 @@
   margin-top: 40px;
   margin-left: 20px;
 }
-@media screen and (max-width: 600px) {
-  .signin_container {
+@media screen and (max-width: 900px) {
+  .auth_container {
     width: 100%;
     display: block;
   }
