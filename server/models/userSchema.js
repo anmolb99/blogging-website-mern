@@ -4,19 +4,16 @@ const salt = bcrypt.genSaltSync(10);
 const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
     required: true,
   },
   password: {
-    type: String,
-    required: true,
-  },
-  cpassword: {
     type: String,
     required: true,
   },
@@ -34,7 +31,6 @@ userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     console.log("hua kuch");
     this.password = await bcrypt.hash(this.password, salt);
-    this.cpassword = await bcrypt.hash(this.cpassword, salt);
   }
   next();
 });

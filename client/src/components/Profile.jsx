@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -8,9 +8,56 @@ import {
   Badge,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import moment from "moment";
 import "../style/profile.css";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-const Profile = () => {
+import axios from "axios";
+import { Api } from "../API/Api";
+
+const Profile = ({ match }) => {
+  // console.log(match.params.id);
+  const [userData, setUserData] = useState({});
+  const [userBlogs, setUserBlogs] = useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const getProfile = async () => {
+    try {
+      const res = await axios.post(`${Api.URL}/get_user/${match.params.id}`);
+      console.log(res.data.blogs);
+      setUserData(res.data.user);
+      setUserBlogs(res.data.blogs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const getBlogs = async () => {
+  //   try {
+  //     //const res = await axios.post(`${Api.URL}/user_blogs/${userData._id}`);
+  //     console.log(userData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    getProfile();
+    // getBlogs();
+  }, []);
   return (
     <>
       <div className="profile">
@@ -22,76 +69,83 @@ const Profile = () => {
           />
         </div>
         <div className="user_name">
-          <span>Anshuman Sharma</span>
+          <span>{userData.username}</span>
+        </div>
+        <div className="full_blog_icons">
+          <i className="fas fa-edit m-2" />
+
+          <i className="fas fa-sign-out-alt" onClick={handleClickOpen} />
         </div>
         <hr />
         <div className="user_blogs">
-          <div className="particular_blog">
-            <Card>
-              <CardBody>
-                <CardTitle className="mini_blog_username">
-                  Anshuman sharma{" "}
-                  <Badge color="success" className="mini_blog_category_badge">
-                    Travel
-                  </Badge>
-                </CardTitle>
+          {userBlogs.map((blogs, index) => {
+            const blogImg = blogs.blogImage
+              ? Api.URL + "/" + blogs.blogImage
+              : "https://media.istockphoto.com/photos/white-rough-paper-texture-background-picture-id672541502?k=20&m=672541502&s=170667a&w=0&h=GIS9KEBncPrIV81ULxaEURlfJq5-4cBWDwqemhkq8q0=";
+            return (
+              <div className="particular_blog" key={index}>
+                <Card>
+                  <CardBody>
+                    <CardTitle className="mini_blog_username">
+                      {blogs.blogUsername}{" "}
+                      <Badge
+                        color="success"
+                        className="mini_blog_category_badge"
+                      >
+                        {blogs.blogCategory}
+                      </Badge>
+                    </CardTitle>
 
-                <p className="mini_blog_date">23 july</p>
-              </CardBody>
-              <Link to="detail">
-                <CardImg
-                  id="mini_blog_image"
-                  width="100%"
-                  src="https://images.ctfassets.net/hrltx12pl8hq/3MbF54EhWUhsXunc5Keueb/60774fbbff86e6bf6776f1e17a8016b4/04-nature_721703848.jpg?fit=fill&w=480&h=270"
-                  alt="Card image cap"
-                />
-                <CardBody>
-                  <CardTitle className="mini_blog_title">
-                    How to delete instagram account permanentaly
-                  </CardTitle>
+                    <p className="mini_blog_date">
+                      {moment(blogs.blogTime).fromNow()}
+                    </p>
+                  </CardBody>
+                  <Link to={`/full_blog/${blogs._id}`}>
+                    <CardImg
+                      id="mini_blog_image"
+                      width="100%"
+                      src={blogImg}
+                      alt="Card image cap"
+                    />
+                    <CardBody>
+                      <CardTitle className="mini_blog_title">
+                        {blogs.blogTitle}
+                      </CardTitle>
 
-                  <CardText className="mini_blog_description">
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </CardText>
-                </CardBody>
-              </Link>
-            </Card>
-          </div>
-          <div className="particular_blog">
-            <Card>
-              <CardBody>
-                <CardTitle className="mini_blog_username">
-                  Anshuman sharma{" "}
-                  <Badge color="success" className="mini_blog_category_badge">
-                    Travel
-                  </Badge>
-                </CardTitle>
-
-                <p className="mini_blog_date">23 july</p>
-              </CardBody>
-              <Link to="detail">
-                <CardImg
-                  id="mini_blog_image"
-                  width="100%"
-                  src="https://images.ctfassets.net/hrltx12pl8hq/3MbF54EhWUhsXunc5Keueb/60774fbbff86e6bf6776f1e17a8016b4/04-nature_721703848.jpg?fit=fill&w=480&h=270"
-                  alt="Card image cap"
-                />
-                <CardBody>
-                  <CardTitle className="mini_blog_title">
-                    How to delete instagram account permanentaly
-                  </CardTitle>
-
-                  <CardText className="mini_blog_description">
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </CardText>
-                </CardBody>
-              </Link>
-            </Card>
-          </div>
+                      <CardText className="mini_blog_description">
+                        {blogs.blogDescription}
+                      </CardText>
+                    </CardBody>
+                  </Link>
+                </Card>
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Are you sure you want to Logout ?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            If you logout your account will be romoved from this device and you
+            have to relogin to access the sevices.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>cancel</Button>
+          <Link to="/logout">
+            <Button autoFocus>yes, Logout</Button>
+          </Link>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

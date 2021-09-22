@@ -91,12 +91,16 @@
   border: none;
   background-color: unset;
   border-bottom: 1px solid rgb(232, 223, 223);
-  padding-left: 5%;
+  padding-left: 10%;
   padding-bottom: 5px;
   font-size: 0.9rem;
   color: #fff;
   margin-left: 15px;
   margin-top: 50px;
+}
+.input_signup::placeholder {
+  color: #fff;
+  opacity: 0.7;
 }
 .input_signup:active {
   border: none;

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import "../style/leftmenu.css";
 
 const LeftMenu = () => {
+  const [categories, setCategories] = useState(["Music", "Fashion", "Beauty"]);
   return (
     <>
       <div className="leftmenu">
@@ -14,21 +15,19 @@ const LeftMenu = () => {
         </Link>
 
         <ListGroup className="all_categories">
-          <ListGroupItem active action>
-            All Categories
-          </ListGroupItem>
-          <ListGroupItem tag="a" href="#" action>
-            Dapibus
-          </ListGroupItem>
-          <ListGroupItem tag="a" href="#" action>
-            Morbi
-          </ListGroupItem>
-          <ListGroupItem tag="a" href="#" action>
-            Porta
-          </ListGroupItem>
-          <ListGroupItem disabled tag="a" href="#" action>
-            Vestibulum
-          </ListGroupItem>
+          <Link to="/">
+            <ListGroupItem active action>
+              All Categories
+            </ListGroupItem>
+          </Link>
+
+          {categories.map((category, index) => {
+            return (
+              <Link to={`/?category=${category}`} key={index}>
+                <ListGroupItem action>{category}</ListGroupItem>
+              </Link>
+            );
+          })}
         </ListGroup>
       </div>
     </>

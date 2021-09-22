@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../style/createblog.css";
 import { Button, Label } from "reactstrap";
+import axios from "axios";
+import { Api } from "../API/Api";
+import Cookies from "universal-cookie";
 
-const EditBlog = () => {
+const EditBlog = ({ match }) => {
+  const cookies = new Cookies();
   const [showImg, setShowImg] = useState("");
+  const [blogData, setBlogData] = useState({
+    blogTitle: "",
+    blogDescription: "",
+  });
 
   const imageHandler = (e) => {
     const imagePath = URL.createObjectURL(e.target.files[0]);
@@ -13,6 +21,45 @@ const EditBlog = () => {
   const removeImg = () => {
     setShowImg("");
   };
+
+  const handleChange = (e) => {
+    setBlogData({
+      ...blogData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    console.log(blogData);
+  };
+
+  const getBlogData = async () => {
+    const token = {
+      jwt: cookies.get("token"),
+    };
+    try {
+      const res = await axios.post(
+        `${Api.URL}/particular_blog/${match.params.id}`,
+        token
+      );
+      console.log(res);
+
+      if (res.status === 200) {
+        setShowImg(Api.URL + "/" + res.data.blogImage);
+        setBlogData({
+          blogTitle: res.data.blogTitle,
+          blogDescription: res.data.blogDescription,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBlogData();
+  }, []);
 
   return (
     <>
@@ -51,16 +98,26 @@ const EditBlog = () => {
             type="text"
             className="input_title"
             placeholder="Enter Title"
+            name="blogTitle"
+            onChange={handleChange}
+            value={blogData.blogTitle}
           />
           <textarea
             cols="30"
             rows="15"
-            autoFocus="true"
             placeholder="Enter Description..."
             className="input_description"
+            name="blogDescription"
+            onChange={handleChange}
+            value={blogData.blogDescription}
           ></textarea>
 
-          <Button type="submit" color="primary" className="publish_button">
+          <Button
+            type="submit"
+            color="primary"
+            className="publish_button"
+            onClick={handleEdit}
+          >
             EDIT <i className="fas fa-check-circle"></i>
           </Button>
         </form>

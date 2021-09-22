@@ -17,6 +17,7 @@
   color: unset;
 }
 #mini_blog_image {
+  height: 180px;
   margin-top: -25px;
   border-radius: unset;
 }
@@ -41,6 +42,9 @@
   font-size: 0.8rem;
 }
 @media screen and (max-width: 600px) {
+  .rigthmenu {
+    text-align: center;
+  }
   .home {
     display: grid;
   }
