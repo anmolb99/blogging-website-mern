@@ -4,22 +4,36 @@ import { Button, Label } from "reactstrap";
 import axios from "axios";
 import { Api } from "../API/Api";
 import Cookies from "universal-cookie";
+import { useHistory } from "react-router";
 
 const EditBlog = ({ match }) => {
   const cookies = new Cookies();
+  const history = useHistory();
+
   const [showImg, setShowImg] = useState("");
+  const [imgStatus, setImgStatus] = useState("");
+  const [blogId, setblogId] = useState("");
   const [blogData, setBlogData] = useState({
+    blogImage: "",
     blogTitle: "",
     blogDescription: "",
   });
 
   const imageHandler = (e) => {
+    setImgStatus("no");
     const imagePath = URL.createObjectURL(e.target.files[0]);
     setShowImg(imagePath);
+    setBlogData({
+      ...blogData,
+      blogImage: e.target.files[0],
+    });
+    console.log(blogData.blogImage);
   };
 
   const removeImg = () => {
+    setImgStatus("yes");
     setShowImg("");
+    setBlogData({ ...blogData, blogImage: "" });
   };
 
   const handleChange = (e) => {
@@ -29,9 +43,30 @@ const EditBlog = ({ match }) => {
     });
   };
 
-  const handleEdit = (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault();
+
     console.log(blogData);
+
+    const newImg = blogData.blogImage || "";
+
+    const formData = new FormData();
+
+    formData.append("BLOGPOST", newImg);
+    formData.append("blogTitle", blogData.blogTitle);
+    formData.append("blogDescription", blogData.blogDescription);
+    formData.append("imgStatus", imgStatus);
+
+    try {
+      const res = await axios.put(`${Api.URL}/edit_blog/${blogId}`, formData);
+      console.log(res);
+      if (res.status === 200) {
+        window.alert("Blog Updated Successfuly");
+        history.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getBlogData = async () => {
@@ -46,7 +81,11 @@ const EditBlog = ({ match }) => {
       console.log(res);
 
       if (res.status === 200) {
-        setShowImg(Api.URL + "/" + res.data.blogImage);
+        if (res.data.blogImage) {
+          setShowImg(Api.URL + "/" + res.data.blogImage);
+        }
+
+        setblogId(res.data._id);
         setBlogData({
           blogTitle: res.data.blogTitle,
           blogDescription: res.data.blogDescription,

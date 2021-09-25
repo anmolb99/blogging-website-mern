@@ -16,8 +16,8 @@ const App = () => {
       <NavTop />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/create_blog" component={CreateBlog} />
         <Route exact path="/signin" component={Auth} />
+        <Route exact path="/create_blog" component={CreateBlog} />
         <Route exact path="/full_blog/:id" component={DetailView} />
         <Route exact path="/edit_blog/:id" component={EditBlog} />
         <Route exact path="/profile/:id" component={Profile} />

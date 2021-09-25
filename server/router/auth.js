@@ -56,16 +56,8 @@ router.post("/signin", async (req, res) => {
 
         return res.status(201).json({
           token: token,
-          username: userExist.username,
+          uid: userExist._id,
         });
-
-        // return res
-        //   .cookie("jwt", token, {
-        //     expires: new Date(Date.now() + 2592000000),
-        //     httpOnly: true,
-        //   })
-        //   .status(201)
-        //   .json({ msg: "login success" });
       } else {
         return res.status(422).json({ msg: "Invalid Credentials" });
       }

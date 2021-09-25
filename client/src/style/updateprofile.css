@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.inputfordp {
+  display: none;
+}
+
+.dp_preview {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+#dp_preview {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-size: 100% 100%;
+}

@@ -5,15 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route } from "react-router-dom";
+import Auth from "./components/Auth";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-      {/* <Route exact path="/" component={App} />
-      <Route exact path="/signin" component={Signin} /> */}
-    </BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>
+    <App />
+    {/* <Route exact path="/" component={App} />
+    <Route exact path="/signin" component={Auth} /> */}
+  </BrowserRouter>,
+
   document.getElementById("root")
 );
 

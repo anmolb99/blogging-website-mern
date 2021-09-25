@@ -22,18 +22,7 @@ import { Api } from "../API/Api";
 
 const NavTop = () => {
   const cookies = new Cookies();
-  const [loginStatus, setLoginStatus] = useState(false);
-  const [refresh, setRefresh] = useState(null);
   const [user, setUser] = useState({});
-  const token = cookies.get("token");
-
-  // const loginStatusCheck = () => {
-  //   if (token) {
-  //     setLoginStatus(true);
-  //   } else {
-  //     setLoginStatus(false);
-  //   }
-  // };
 
   const getUsername = async () => {
     const token = {
@@ -41,7 +30,7 @@ const NavTop = () => {
     };
     try {
       const res = await axios.post(`${Api.URL}/get_username`, token);
-      console.log(res);
+      // console.log(res);
       setUser(res.data);
     } catch (error) {
       console.log(error);
@@ -49,7 +38,6 @@ const NavTop = () => {
   };
 
   useEffect(() => {
-    // loginStatusCheck();
     getUsername();
   }, []);
 
@@ -68,7 +56,11 @@ const NavTop = () => {
                 <span>{user.username}</span>
                 <img
                   id="homepage_profileimg"
-                  src="https://w7.pngwing.com/pngs/340/956/png-transparent-profile-user-icon-computer-icons-user-profile-head-ico-miscellaneous-black-desktop-wallpaper.png"
+                  src={
+                    user.profilepic
+                      ? `${Api.URL}/${user.profilepic}`
+                      : "https://w7.pngwing.com/pngs/340/956/png-transparent-profile-user-icon-computer-icons-user-profile-head-ico-miscellaneous-black-desktop-wallpaper.png"
+                  }
                   alt=""
                 />
               </div>

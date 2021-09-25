@@ -20,7 +20,7 @@ const LogOut = () => {
 
       if (res.status === 200) {
         cookies.remove("token");
-        cookies.remove("username");
+        cookies.remove("uid");
         history.push("/signin");
         console.log("log out success");
       }

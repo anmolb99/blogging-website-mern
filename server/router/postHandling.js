@@ -62,6 +62,58 @@ router.post("/post_blog", blogUpload.single("BLOGPOST"), (req, res) => {
   }
 });
 
+router.put(
+  "/edit_blog/:id",
+  blogUpload.single("BLOGPOST"),
+  async (req, res) => {
+    // console.log(req.body, req.file);
+
+    try {
+      const { imgStatus, blogTitle, blogDescription } = req.body;
+      const blog = await Blog.findById(req.params.id);
+
+      let newImg;
+
+      if (imgStatus === "yes") {
+        newImg = "";
+      } else if (req.file === undefined) {
+        newImg = blog.blogImage;
+      } else {
+        newImg = req.file.filename;
+      }
+
+      if (req.file != undefined || imgStatus === "yes") {
+        deleteBlogLocal(blog.blogImage);
+      }
+
+      (blog.blogTitle = blogTitle || blog.blogTitle),
+        (blog.blogDescription = blogDescription),
+        (blog.blogImage = newImg);
+
+      const updatedBlog = await blog.save();
+
+      console.log(updatedBlog);
+      res.status(200).json(updatedBlog);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+router.delete("/delete_blog/:id", async (req, res) => {
+  // console.log(req.params.id);
+
+  try {
+    const deleteBlog = await Blog.findOneAndDelete({ _id: req.params.id });
+    if (deleteBlog) {
+      res.status(200).json({ msg: "blog deleted successfuly" });
+      deleteBlogLocal(deleteBlog.blogImage);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.get("/get_blogs", async (req, res) => {
   const { category } = req.query;
   let data;
@@ -87,13 +139,15 @@ router.post("/particular_blog/:id", async (req, res) => {
   }
 });
 
-// router.post("/user_blogs/:id", async (req, res) => {
-//   // try {
-//   //   const data = await Blog.findOne({ blogOwnerId: req.params.id });
-//   // } catch (error) {
-//   //   console.log(error);
-//   // }
-//   console.log(req.params.id);
-// });
+const deleteBlogLocal = (img) => {
+  const pth = `./BlogImages`;
+  fs.unlink(pth + "/" + img, (err) => {
+    if (err) {
+      console.log("failed to delete old local image:" + err);
+    } else {
+      console.log("successfully deleted old local image");
+    }
+  });
+};
 
 module.exports = router;

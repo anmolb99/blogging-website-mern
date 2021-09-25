@@ -16,15 +16,21 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Cookies from "universal-cookie";
 
 import axios from "axios";
 import { Api } from "../API/Api";
+import UpdateProfile from "./UpdateProfile";
 
 const Profile = ({ match }) => {
   // console.log(match.params.id);
+
+  const cookies = new Cookies();
+
   const [userData, setUserData] = useState({});
   const [userBlogs, setUserBlogs] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [impActions, setImpActions] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -37,33 +43,33 @@ const Profile = ({ match }) => {
   const getProfile = async () => {
     try {
       const res = await axios.post(`${Api.URL}/get_user/${match.params.id}`);
-      console.log(res.data.blogs);
+      //console.log(res.data.blogs);
       setUserData(res.data.user);
       setUserBlogs(res.data.blogs);
+      if (cookies.get("uid") === res.data.user._id) {
+        setImpActions(true);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const getBlogs = async () => {
-  //   try {
-  //     //const res = await axios.post(`${Api.URL}/user_blogs/${userData._id}`);
-  //     console.log(userData);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   useEffect(() => {
     getProfile();
-    // getBlogs();
-  }, []);
+  }, [match.params.id, userData]);
+
+  const imgPre = userData.profilepic
+    ? `${Api.URL}/${userData.profilepic}`
+    : null;
   return (
     <>
       <div className="profile">
         <div className="profile_pic">
           <img
-            src="https://cdn.icon-icons.com/icons2/2506/PNG/512/user_icon_150670.png"
+            src={
+              imgPre ||
+              "https://cdn.icon-icons.com/icons2/2506/PNG/512/user_icon_150670.png"
+            }
             alt="profilepic"
             id="user_profile_pic"
           />
@@ -71,11 +77,19 @@ const Profile = ({ match }) => {
         <div className="user_name">
           <span>{userData.username}</span>
         </div>
-        <div className="full_blog_icons">
-          <i className="fas fa-edit m-2" />
 
-          <i className="fas fa-sign-out-alt" onClick={handleClickOpen} />
-        </div>
+        {impActions ? (
+          <div className="full_blog_icons">
+            <UpdateProfile
+              uid={userData._id}
+              uname={userData.username}
+              profilepic={imgPre}
+            />
+
+            <i className="fas fa-sign-out-alt" onClick={handleClickOpen} />
+          </div>
+        ) : null}
+
         <hr />
         <div className="user_blogs">
           {userBlogs.map((blogs, index) => {

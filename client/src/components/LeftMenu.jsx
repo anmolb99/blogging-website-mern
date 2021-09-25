@@ -4,7 +4,24 @@ import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import "../style/leftmenu.css";
 
 const LeftMenu = () => {
-  const [categories, setCategories] = useState(["Music", "Fashion", "Beauty"]);
+  const [categories, setCategories] = useState([
+    "Music",
+    "Fashion",
+    "Beauty",
+    "Travel",
+    "Food",
+    "Photography",
+    "Health",
+    "Technology",
+    "Business",
+    "Fitness",
+    "Education",
+    "Science",
+    "Shopping",
+    "Entertainment",
+    "Sports",
+    "Gaming",
+  ]);
   return (
     <>
       <div className="leftmenu">

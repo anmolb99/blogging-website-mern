@@ -1,21 +1,38 @@
 import React, { useEffect, useState } from "react";
 import "../style/detailview.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { Api } from "../API/Api";
 import moment from "moment";
 import Cookies from "universal-cookie";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const DetailView = ({ match }) => {
   const [impActions, setImpActions] = useState(false);
   const cookies = new Cookies();
+  const [open, setOpen] = React.useState(false);
   const [blog, setBlog] = useState({});
+
+  const history = useHistory();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const getBlog = async () => {
     const token = {
       jwt: cookies.get("token"),
     };
-    const rootUsername = cookies.get("username");
+    const rootId = cookies.get("uid");
 
     try {
       const res = await axios.post(
@@ -24,8 +41,22 @@ const DetailView = ({ match }) => {
       );
       //console.log(res);
       setBlog(res.data);
-      if (rootUsername === res.data.blogUsername) {
+      if (rootId === res.data.blogOwnerId) {
         setImpActions(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteBlog = async (id) => {
+    try {
+      const res = await axios.delete(`${Api.URL}/delete_blog/${id}`);
+      console.log(res);
+      setOpen(false);
+      if (res.status === 200) {
+        window.alert("Blog Deleted Successfuly");
+        history.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -36,17 +67,15 @@ const DetailView = ({ match }) => {
     getBlog();
   }, []);
 
+  const blogImg = blog.blogImage
+    ? Api.URL + "/" + blog.blogImage
+    : "https://media.istockphoto.com/photos/white-rough-paper-texture-background-picture-id672541502?k=20&m=672541502&s=170667a&w=0&h=GIS9KEBncPrIV81ULxaEURlfJq5-4cBWDwqemhkq8q0=";
+
   return (
     <>
       <div className="detailview">
         <div className="full_blog_image">
-          {blog.blogImage ? (
-            <img
-              id="full_blog_image"
-              src={Api.URL + "/" + blog.blogImage}
-              alt="not found"
-            />
-          ) : null}
+          <img id="full_blog_image" src={blogImg} alt="not found" />
         </div>
 
         {impActions ? (
@@ -55,7 +84,7 @@ const DetailView = ({ match }) => {
               <i className="fas fa-edit"></i>
             </Link>
 
-            <i className="fas fa-trash"></i>
+            <i className="fas fa-trash" onClick={handleClickOpen}></i>
           </div>
         ) : null}
 
@@ -81,6 +110,26 @@ const DetailView = ({ match }) => {
           </div>
         </div>
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete Blog</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this blog ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>cancel</Button>
+
+          <Button autoFocus onClick={() => deleteBlog(blog._id)}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

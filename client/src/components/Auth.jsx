@@ -63,7 +63,7 @@ const Auth = () => {
         window.alert("Please fill all fields");
       } else {
         const res = await axios.post(`${Api.URL}/signin`, signinData);
-        console.log(res);
+        // console.log(res);
 
         if (res.status === 201) {
           window.alert("Login successfully");
@@ -71,10 +71,11 @@ const Auth = () => {
             path: "/",
             expires: new Date(Date.now() + 2592000000),
           });
-          cookies.set("username", res.data.username, {
+          cookies.set("uid", res.data.uid, {
             path: "/",
             expires: new Date(Date.now() + 2592000000),
           });
+
           history.push("/");
           console.log("login successfully");
         }
