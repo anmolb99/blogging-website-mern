@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../style/createblog.css";
-import { Button, Label } from "reactstrap";
+import { Label } from "reactstrap";
 import { Api } from "../API/Api";
 import { useHistory } from "react-router";
 import axios from "axios";
@@ -10,6 +10,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Cookies from "universal-cookie";
+import { Button } from "@mui/material";
+import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
+import NavTop from "./Navbar";
 
 const CreateBlog = () => {
   const [showImg, setShowImg] = useState("");
@@ -181,8 +184,10 @@ const CreateBlog = () => {
             color="success"
             className="publish_button"
             onClick={publishBlog}
+            variant="contained"
+            endIcon={<FileUploadTwoToneIcon />}
           >
-            PUBLISH <i className="fas fa-upload"></i>
+            PUBLISH
           </Button>
         </form>
       </div>

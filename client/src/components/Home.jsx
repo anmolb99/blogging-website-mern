@@ -1,7 +1,7 @@
 import React from "react";
-import { Route, Switch } from "react-router";
 import Blogs from "./Blogs";
 import LeftMenu from "./LeftMenu";
+import NavTop from "./Navbar";
 import "../style/home.css";
 
 const Home = () => {

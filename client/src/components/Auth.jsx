@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../style/auth.css";
-import { Button } from "reactstrap";
+import { Button, Alert, Stack } from "@mui/material";
 import { Api } from "../API/Api";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { UserContext } from "../App";
 
 const Auth = () => {
+  const {
+    state: { signinStatus, rootUser },
+    dispatch,
+  } = useContext(UserContext);
   const history = useHistory();
   const cookies = new Cookies();
 
@@ -15,6 +20,7 @@ const Auth = () => {
     email: "",
     password: "",
     cpassword: "",
+    showPassword: false,
   });
 
   const [signinData, setSigninData] = useState({
@@ -77,6 +83,8 @@ const Auth = () => {
           });
 
           history.push("/");
+          // console.log(res.data);
+          dispatch({ signinStatus: !signinStatus });
           console.log("login successfully");
         }
       }
@@ -84,6 +92,7 @@ const Auth = () => {
       console.log("error while log in", error);
       if (error.response.status === 422) {
         window.alert("Invalid credentials");
+
         console.log("Invalid credentials");
       }
     }
@@ -99,7 +108,6 @@ const Auth = () => {
       <div className="auth_main">
         <div className="auth_container">
           {/* SIGN IN */}
-
           <div className="signin">
             <div className="signin_top">
               <p>Already regestered ?</p>
@@ -140,9 +148,10 @@ const Auth = () => {
             <Button
               type="submit"
               className="final_signin_button"
-              size="sm"
+              size="small"
               color="primary"
               onClick={handleSignin}
+              variant="contained"
             >
               SIGN IN
             </Button>
@@ -216,13 +225,17 @@ const Auth = () => {
             <Button
               type="submit"
               className="signup_button"
-              color="success"
+              variant="contained"
               onClick={handleRegister}
+              color="success"
             >
               Register
             </Button>
           </div>
         </div>
+        {/* <Stack sx={{ width: "100%" }} spacing={2}>
+          <Alert severity="error">This is an error alert — check it out!</Alert>
+        </Stack> */}
       </div>
     </>
   );

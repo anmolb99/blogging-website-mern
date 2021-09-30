@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { ListGroup, ListGroupItem, Button } from "reactstrap";
+import { Link, NavLink } from "react-router-dom";
+import { ListGroup, ListGroupItem } from "reactstrap";
+import Button from "@mui/material/Button";
+// import AddIcon from "@mui/icons-material/AddCircle";
 import "../style/leftmenu.css";
 
 const LeftMenu = () => {
@@ -26,8 +28,8 @@ const LeftMenu = () => {
     <>
       <div className="leftmenu">
         <Link style={{ paddingTop: "30px" }} to="/create_blog">
-          <Button color="success" size="sm">
-            CREATE BLOG <i className="fas fa-plus" />{" "}
+          <Button color="success" size="small" variant="contained">
+            CREATE BLOG +
           </Button>
         </Link>
 

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../style/createblog.css";
-import { Button, Label } from "reactstrap";
+import { Label } from "reactstrap";
+import { Button } from "@mui/material";
+import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 import axios from "axios";
 import { Api } from "../API/Api";
 import Cookies from "universal-cookie";
 import { useHistory } from "react-router";
+import NavTop from "./Navbar";
 
 const EditBlog = ({ match }) => {
   const cookies = new Cookies();
@@ -153,11 +156,13 @@ const EditBlog = ({ match }) => {
 
           <Button
             type="submit"
-            color="primary"
+            color="success"
             className="publish_button"
             onClick={handleEdit}
+            variant="contained"
+            endIcon={<DoneAllTwoToneIcon />}
           >
-            EDIT <i className="fas fa-check-circle"></i>
+            Update
           </Button>
         </form>
       </div>

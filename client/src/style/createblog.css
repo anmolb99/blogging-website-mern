@@ -49,7 +49,7 @@
   opacity: 0.9;
 }
 .publish_button {
-  margin-top: 20px;
+  padding: 20px;
   float: right;
 }
 .publish_button i {

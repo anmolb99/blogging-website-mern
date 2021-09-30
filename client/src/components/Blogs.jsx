@@ -20,12 +20,13 @@ import moment from "moment";
 const Blogs = () => {
   const { search } = useLocation();
   const [allBlogs, setAllBlogs] = useState([]);
+  const [userData, setUserData] = useState({});
 
   const getBlogs = async () => {
     try {
-      console.log(search);
       const res = await axios.get(`${Api.URL}/get_blogs/${search}`);
       setAllBlogs(res.data);
+      //  console.log(allBlogs);
     } catch (err) {
       console.log(err);
     }
@@ -38,53 +39,67 @@ const Blogs = () => {
   return (
     <>
       <div className="rigthmenu">
-        {allBlogs.map((blog, index) => {
-          const blogImg = blog.blogImage
-            ? Api.URL + "/" + blog.blogImage
-            : "https://media.istockphoto.com/photos/white-rough-paper-texture-background-picture-id672541502?k=20&m=672541502&s=170667a&w=0&h=GIS9KEBncPrIV81ULxaEURlfJq5-4cBWDwqemhkq8q0=";
-          return (
-            <div className="particular_blog" key={index}>
-              <Card>
-                <CardBody>
-                  <CardTitle className="mini_blog_username">
-                    <Link to={`/profile/${blog.blogOwnerId}`}>
-                      {blog.blogUsername}{" "}
-                    </Link>
-                    <Link to={`/?category=${blog.blogCategory}`}>
-                      <Badge
-                        color="success"
-                        className="mini_blog_category_badge"
-                      >
-                        {blog.blogCategory}
-                      </Badge>
-                    </Link>
-                  </CardTitle>
-
-                  <p className="mini_blog_date">
-                    {moment(blog.blogTime).fromNow()}
-                  </p>
-                </CardBody>
-                <Link to={`/full_blog/${blog._id}`}>
-                  <CardImg
-                    id="mini_blog_image"
-                    width="100%"
-                    src={blogImg}
-                    alt="Card image cap"
-                  />
+        {allBlogs.length > 0 ? (
+          allBlogs.map((blog, index) => {
+            const blogImg = blog.blogImage
+              ? Api.URL + "/" + blog.blogImage
+              : "/images/blank-blogpic.jpg";
+            let blogDes = blog.blogDescription;
+            if (blog.blogDescription.length >= 80) {
+              blogDes = blog.blogDescription.slice(0, 80) + "...";
+            }
+            let blogTit = blog.blogTitle;
+            if (blog.blogTitle.length >= 55) {
+              blogTit = blog.blogTitle.slice(0, 55) + "...";
+            }
+            return (
+              <div className="particular_blog" key={index}>
+                <Card>
                   <CardBody>
-                    <CardTitle className="mini_blog_title">
-                      {blog.blogTitle}
+                    <CardTitle className="mini_blog_username">
+                      <Link to={`/profile/${blog.blogOwnerId}`}>
+                        {blog.blogUsername}{" "}
+                      </Link>
+                      <Link to={`/?category=${blog.blogCategory}`}>
+                        <Badge
+                          color="success"
+                          className="mini_blog_category_badge"
+                        >
+                          {blog.blogCategory}
+                        </Badge>
+                      </Link>
                     </CardTitle>
 
-                    <CardText className="mini_blog_description">
-                      {blog.blogDescription}
-                    </CardText>
+                    <p className="mini_blog_date">
+                      {moment(blog.blogTime).fromNow()}
+                    </p>
                   </CardBody>
-                </Link>
-              </Card>
-            </div>
-          );
-        })}
+                  <Link to={`/full_blog/${blog._id}`}>
+                    <CardImg
+                      id="mini_blog_image"
+                      width="100%"
+                      src={blogImg}
+                      alt="Card image cap"
+                    />
+                    <CardBody>
+                      <CardTitle className="mini_blog_title">
+                        {blogTit}
+                      </CardTitle>
+
+                      <CardText className="mini_blog_description">
+                        {blogDes}
+                      </CardText>
+                    </CardBody>
+                  </Link>
+                </Card>
+              </div>
+            );
+          })
+        ) : (
+          <div className="no_blogs">
+            <p> No Blogs Found </p>
+          </div>
+        )}
       </div>
     </>
   );

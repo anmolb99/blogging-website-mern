@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import React, { useState, useEffect, useContext } from "react";
+
+import {
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+
+import EditIcon from "@mui/icons-material/Edit";
+
 import "../style/updateprofile.css";
 import { Label } from "reactstrap";
 import axios from "axios";
 import { Api } from "../API/Api";
 import Cookies from "universal-cookie";
+import { UserContext } from "../App";
 
 export default function FormDialog({ uid, uname, profilepic }) {
+  const {
+    state: { profileUpdateStatus },
+    dispatch,
+  } = useContext(UserContext);
   const cookies = new Cookies();
-  // console.log(profilepic);
 
   const [showImg, setShowImg] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -48,6 +58,7 @@ export default function FormDialog({ uid, uname, profilepic }) {
       if (res.status === 200) {
         console.log(res);
         handleClose();
+        dispatch({ profileUpdateStatus: !profileUpdateStatus });
       }
     } catch (error) {
       console.log(error);
@@ -87,7 +98,11 @@ export default function FormDialog({ uid, uname, profilepic }) {
 
   return (
     <div>
-      <i className="fas fa-edit" onClick={handleClickOpen} />
+      <Tooltip title="Edit Profile">
+        <Button variant="contained" onClick={handleClickOpen}>
+          <EditIcon sx={{ fontSize: 17 }} />
+        </Button>
+      </Tooltip>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Edit Profile</DialogTitle>
@@ -112,7 +127,6 @@ export default function FormDialog({ uid, uname, profilepic }) {
             <img src={imgPre} id="dp_preview" />
           </div>
           <TextField
-            autoFocus
             margin="dense"
             id="username"
             label="Username"
@@ -127,7 +141,9 @@ export default function FormDialog({ uid, uname, profilepic }) {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
 
-          <Button onClick={updateProfile}>Update</Button>
+          <Button variant="contained" color="success" onClick={updateProfile}>
+            Update
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

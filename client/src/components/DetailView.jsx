@@ -5,12 +5,20 @@ import axios from "axios";
 import { Api } from "../API/Api";
 import moment from "moment";
 import Cookies from "universal-cookie";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
+import {
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Tooltip,
+} from "@mui/material";
+
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import NavTop from "./Navbar";
 
 const DetailView = ({ match }) => {
   const [impActions, setImpActions] = useState(false);
@@ -69,8 +77,7 @@ const DetailView = ({ match }) => {
 
   const blogImg = blog.blogImage
     ? Api.URL + "/" + blog.blogImage
-    : "https://media.istockphoto.com/photos/white-rough-paper-texture-background-picture-id672541502?k=20&m=672541502&s=170667a&w=0&h=GIS9KEBncPrIV81ULxaEURlfJq5-4cBWDwqemhkq8q0=";
-
+    : "/images/blank-blogpic.jpg";
   return (
     <>
       <div className="detailview">
@@ -81,10 +88,23 @@ const DetailView = ({ match }) => {
         {impActions ? (
           <div className="full_blog_icons">
             <Link to={`/edit_blog/${blog._id}`}>
-              <i className="fas fa-edit"></i>
+              <Tooltip title="Edit Blog">
+                <Button variant="contained">
+                  <EditIcon sx={{ fontSize: 17 }} />
+                </Button>
+              </Tooltip>
             </Link>
 
-            <i className="fas fa-trash" onClick={handleClickOpen}></i>
+            <Tooltip title="Delete Blog">
+              <Button
+                variant="outlined"
+                onClick={handleClickOpen}
+                sx={{ marginLeft: 2 }}
+                color="error"
+              >
+                <DeleteIcon sx={{ fontSize: 17 }} />
+              </Button>
+            </Tooltip>
           </div>
         ) : null}
 
@@ -100,8 +120,9 @@ const DetailView = ({ match }) => {
             <p>
               Author-{" "}
               <span className="full_blog_author_name">
-                {" "}
-                {blog.blogUsername}{" "}
+                <Link to={`/profile/${blog.blogOwnerId}`}>
+                  {blog.blogUsername}{" "}
+                </Link>
               </span>
             </p>
           </div>

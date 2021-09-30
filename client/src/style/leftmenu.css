@@ -16,7 +16,7 @@
 @media screen and (max-width: 600px) {
   .leftmenu {
     width: 100%;
-    height: 300px;
+    height: auto;
     border: none;
   }
   .all_categories {

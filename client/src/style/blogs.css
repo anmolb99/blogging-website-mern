@@ -41,6 +41,10 @@
   opacity: 0.8;
   font-size: 0.8rem;
 }
+.no_blogs {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
 @media screen and (max-width: 600px) {
   .rigthmenu {
     text-align: center;

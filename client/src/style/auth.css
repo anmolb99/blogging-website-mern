@@ -72,7 +72,7 @@
   height: 100%;
   width: 60%;
   background-color: #5e17eb;
-  background-image: url("../images/signup.png");
+  /* background-image: url("../../public/images/signup.png"); */
   background-size: 100% 100%;
   padding: 5%;
   color: #fff;

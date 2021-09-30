@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Card,
   CardBody,
@@ -10,20 +10,27 @@ import {
 import { Link } from "react-router-dom";
 import moment from "moment";
 import "../style/profile.css";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Tooltip,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import Cookies from "universal-cookie";
-
 import axios from "axios";
 import { Api } from "../API/Api";
 import UpdateProfile from "./UpdateProfile";
+import { UserContext } from "../App";
 
 const Profile = ({ match }) => {
-  // console.log(match.params.id);
+  const {
+    state: { profileUpdateStatus },
+    dispatch,
+  } = useContext(UserContext);
 
   const cookies = new Cookies();
 
@@ -46,6 +53,7 @@ const Profile = ({ match }) => {
       //console.log(res.data.blogs);
       setUserData(res.data.user);
       setUserBlogs(res.data.blogs);
+
       if (cookies.get("uid") === res.data.user._id) {
         setImpActions(true);
       }
@@ -56,7 +64,7 @@ const Profile = ({ match }) => {
 
   useEffect(() => {
     getProfile();
-  }, [match.params.id, userData]);
+  }, [match.params.id, profileUpdateStatus]);
 
   const imgPre = userData.profilepic
     ? `${Api.URL}/${userData.profilepic}`
@@ -66,10 +74,7 @@ const Profile = ({ match }) => {
       <div className="profile">
         <div className="profile_pic">
           <img
-            src={
-              imgPre ||
-              "https://cdn.icon-icons.com/icons2/2506/PNG/512/user_icon_150670.png"
-            }
+            src={imgPre || "/images/blank-profile.png"}
             alt="profilepic"
             id="user_profile_pic"
           />
@@ -86,7 +91,16 @@ const Profile = ({ match }) => {
               profilepic={imgPre}
             />
 
-            <i className="fas fa-sign-out-alt" onClick={handleClickOpen} />
+            <Tooltip title="Logout">
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleClickOpen}
+                sx={{ marginLeft: 2 }}
+              >
+                <LogoutIcon sx={{ fontSize: 15 }} />
+              </Button>
+            </Tooltip>
           </div>
         ) : null}
 
@@ -101,7 +115,7 @@ const Profile = ({ match }) => {
                 <Card>
                   <CardBody>
                     <CardTitle className="mini_blog_username">
-                      {blogs.blogUsername}{" "}
+                      {userData.username}{" "}
                       <Badge
                         color="success"
                         className="mini_blog_category_badge"
@@ -156,7 +170,9 @@ const Profile = ({ match }) => {
         <DialogActions>
           <Button onClick={handleClose}>cancel</Button>
           <Link to="/logout">
-            <Button autoFocus>yes, Logout</Button>
+            <Button variant="outlined" color="error">
+              Logout
+            </Button>
           </Link>
         </DialogActions>
       </Dialog>
