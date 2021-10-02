@@ -14,21 +14,27 @@ const NavTop = () => {
     state: { signinStatus, profileUpdateStatus },
     dispatch,
   } = useContext(UserContext);
-  console.log(signinStatus);
+  // console.log(signinStatus);
   const cookies = new Cookies();
   const [user, setUser] = useState({});
-  const [dta, setDta] = useState(null);
 
   const getUsername = async () => {
     const token = {
       jwt: cookies.get("token"),
     };
-    try {
-      const res = await axios.post(`${Api.URL}/get_username`, token);
-      console.log(res);
-      setUser(res.data);
-    } catch (error) {
-      console.log(error);
+
+    console.log("token", token);
+
+    if (token.jwt) {
+      try {
+        const res = await axios.post(`${Api.URL}/get_username/`, token);
+        console.log(res);
+        setUser(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setUser("");
     }
   };
 
@@ -36,17 +42,15 @@ const NavTop = () => {
     getUsername();
   }, [signinStatus, profileUpdateStatus]);
 
-  console.log("reloaded");
-
   return (
     <div>
-      {console.log(dta)}
       <div className="navbar_main">
         <Navbar className="p-2 navbar_in">
           <div className="web_logo">
             <Link to="/">Mini Blogs </Link>
           </div>
 
+          {console.log(user.username)}
           {user.username ? (
             <Link to={`/profile/${user._id}`}>
               <Tooltip title="My Profile">
@@ -66,11 +70,7 @@ const NavTop = () => {
             </Link>
           ) : (
             <Link to="/signin">
-              <Button
-                size="small"
-                variant="contained"
-                className="signin_button"
-              >
+              <Button size="small" variant="contained">
                 SIGN IN
               </Button>
             </Link>

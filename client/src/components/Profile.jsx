@@ -7,7 +7,7 @@ import {
   CardText,
   Badge,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import moment from "moment";
 import "../style/profile.css";
 import {
@@ -28,11 +28,12 @@ import { UserContext } from "../App";
 
 const Profile = ({ match }) => {
   const {
-    state: { profileUpdateStatus },
+    state: { profileUpdateStatus, signinStatus },
     dispatch,
   } = useContext(UserContext);
 
   const cookies = new Cookies();
+  const history = useHistory();
 
   const [userData, setUserData] = useState({});
   const [userBlogs, setUserBlogs] = useState([]);
@@ -56,6 +57,32 @@ const Profile = ({ match }) => {
 
       if (cookies.get("uid") === res.data.user._id) {
         setImpActions(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logoutUser = async () => {
+    try {
+      const uid = cookies.get("uid");
+      const token = cookies.get("token");
+
+      const data = {
+        uid: uid,
+        token: token,
+      };
+
+      const res = await axios.post(`${Api.URL}/logout/`, data);
+
+      console.log(res);
+
+      if (res.status === 200) {
+        cookies.remove("token");
+        cookies.remove("uid");
+        dispatch({ signinStatus: !signinStatus });
+        history.push("/signin");
+        console.log("log out success");
       }
     } catch (error) {
       console.log(error);
@@ -106,49 +133,55 @@ const Profile = ({ match }) => {
 
         <hr />
         <div className="user_blogs">
-          {userBlogs.map((blogs, index) => {
-            const blogImg = blogs.blogImage
-              ? Api.URL + "/" + blogs.blogImage
-              : "https://media.istockphoto.com/photos/white-rough-paper-texture-background-picture-id672541502?k=20&m=672541502&s=170667a&w=0&h=GIS9KEBncPrIV81ULxaEURlfJq5-4cBWDwqemhkq8q0=";
-            return (
-              <div className="particular_blog" key={index}>
-                <Card>
-                  <CardBody>
-                    <CardTitle className="mini_blog_username">
-                      {userData.username}{" "}
-                      <Badge
-                        color="success"
-                        className="mini_blog_category_badge"
-                      >
-                        {blogs.blogCategory}
-                      </Badge>
-                    </CardTitle>
-
-                    <p className="mini_blog_date">
-                      {moment(blogs.blogTime).fromNow()}
-                    </p>
-                  </CardBody>
-                  <Link to={`/full_blog/${blogs._id}`}>
-                    <CardImg
-                      id="mini_blog_image"
-                      width="100%"
-                      src={blogImg}
-                      alt="Card image cap"
-                    />
+          {userBlogs.length > 0 ? (
+            userBlogs.map((blogs, index) => {
+              const blogImg = blogs.blogImage
+                ? Api.URL + "/" + blogs.blogImage
+                : "/images/blank-profile.png";
+              return (
+                <div className="particular_blog" key={index}>
+                  <Card>
                     <CardBody>
-                      <CardTitle className="mini_blog_title">
-                        {blogs.blogTitle}
+                      <CardTitle className="mini_blog_username">
+                        {userData.username}{" "}
+                        <Badge
+                          color="success"
+                          className="mini_blog_category_badge"
+                        >
+                          {blogs.blogCategory}
+                        </Badge>
                       </CardTitle>
 
-                      <CardText className="mini_blog_description">
-                        {blogs.blogDescription}
-                      </CardText>
+                      <p className="mini_blog_date">
+                        {moment(blogs.blogTime).fromNow()}
+                      </p>
                     </CardBody>
-                  </Link>
-                </Card>
-              </div>
-            );
-          })}
+                    <Link to={`/full_blog/${blogs._id}`}>
+                      <CardImg
+                        id="mini_blog_image"
+                        width="100%"
+                        src={blogImg}
+                        alt="Card image cap"
+                      />
+                      <CardBody>
+                        <CardTitle className="mini_blog_title">
+                          {blogs.blogTitle}
+                        </CardTitle>
+
+                        <CardText className="mini_blog_description">
+                          {blogs.blogDescription}
+                        </CardText>
+                      </CardBody>
+                    </Link>
+                  </Card>
+                </div>
+              );
+            })
+          ) : (
+            <p style={{ textAlign: "center", fontWeight: "500" }}>
+              No Blogs Yet
+            </p>
+          )}
         </div>
       </div>
 
@@ -169,11 +202,10 @@ const Profile = ({ match }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>cancel</Button>
-          <Link to="/logout">
-            <Button variant="outlined" color="error">
-              Logout
-            </Button>
-          </Link>
+
+          <Button variant="outlined" color="error" onClick={logoutUser}>
+            Logout
+          </Button>
         </DialogActions>
       </Dialog>
     </>

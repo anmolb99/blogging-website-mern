@@ -38,7 +38,7 @@ router.post(`/register`, async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { email, password } = req.body;
 
   try {
@@ -52,7 +52,7 @@ router.post("/signin", async (req, res) => {
       if (isMatch) {
         const token = await userExist.generateAuthToken();
 
-        console.log(token);
+        // console.log(token);
 
         return res.status(201).json({
           token: token,
@@ -69,21 +69,29 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/logout", authentication, async (req, res) => {
-  console.log(req.body);
-  res.clearCookie("token", { path: "/" });
+router.post("/logout", async (req, res) => {
+  // console.log(req.body);
 
-  req.rootUser.tokens = req.rootUser.tokens.filter((currToken) => {
-    return currToken.token != req.token;
-  });
+  try {
+    const { uid, token } = req.body;
 
-  await req.rootUser.save();
+    const rootUser = await User.findById(uid);
+    // res.clearCookie("uid", "token");
 
-  res.status(200).send("user logout");
+    rootUser.tokens = rootUser.tokens.filter((currToken) => {
+      return currToken.token != token;
+    });
+
+    await rootUser.save();
+
+    res.status(200).send("user logout");
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.post("/create_blog_page", authentication, (req, res) => {
-  console.log(req.body.jwt);
+  // console.log(req.body.jwt);
   res.send(req.rootUser);
 });
 
