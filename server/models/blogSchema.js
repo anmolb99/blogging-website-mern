@@ -5,10 +5,6 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  blogUsername: {
-    type: String,
-    required: true,
-  },
   blogTitle: {
     type: String,
     required: true,

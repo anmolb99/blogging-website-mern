@@ -25,6 +25,7 @@ const DetailView = ({ match }) => {
   const cookies = new Cookies();
   const [open, setOpen] = React.useState(false);
   const [blog, setBlog] = useState({});
+  const [blogAdmin, setBlogAdmin] = useState({});
 
   const history = useHistory();
 
@@ -47,9 +48,10 @@ const DetailView = ({ match }) => {
         `${Api.URL}/particular_blog/${match.params.id}`,
         token
       );
-      //console.log(res);
-      setBlog(res.data);
-      if (rootId === res.data.blogOwnerId) {
+      // console.log(res);
+      setBlog(res.data.blog);
+      setBlogAdmin(res.data.user);
+      if (rootId === res.data.blog.blogOwnerId) {
         setImpActions(true);
       }
     } catch (error) {
@@ -78,6 +80,7 @@ const DetailView = ({ match }) => {
   const blogImg = blog.blogImage
     ? Api.URL + "/" + blog.blogImage
     : "/images/blank-blogpic.jpg";
+
   return (
     <>
       <div className="detailview">
@@ -121,7 +124,7 @@ const DetailView = ({ match }) => {
               Author-{" "}
               <span className="full_blog_author_name">
                 <Link to={`/profile/${blog.blogOwnerId}`}>
-                  {blog.blogUsername}{" "}
+                  {blogAdmin.username}{" "}
                 </Link>
               </span>
             </p>

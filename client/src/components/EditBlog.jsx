@@ -84,14 +84,14 @@ const EditBlog = ({ match }) => {
       console.log(res);
 
       if (res.status === 200) {
-        if (res.data.blogImage) {
-          setShowImg(Api.URL + "/" + res.data.blogImage);
+        if (res.data.blog.blogImage) {
+          setShowImg(Api.URL + "/" + res.data.blog.blogImage);
         }
 
-        setblogId(res.data._id);
+        setblogId(res.data.blog._id);
         setBlogData({
-          blogTitle: res.data.blogTitle,
-          blogDescription: res.data.blogDescription,
+          blogTitle: res.data.blog.blogTitle,
+          blogDescription: res.data.blog.blogDescription,
         });
       }
     } catch (error) {

@@ -78,13 +78,15 @@ router.post("/logout", async (req, res) => {
     const rootUser = await User.findById(uid);
     // res.clearCookie("uid", "token");
 
+    // console.log(rootUser.tokens);
+    console.log(rootUser);
+
     rootUser.tokens = rootUser.tokens.filter((currToken) => {
       return currToken.token != token;
     });
 
     await rootUser.save();
-
-    res.status(200).send("user logout");
+    res.status(200).json({ msg: "user logout" });
   } catch (error) {
     console.log(error);
   }

@@ -20,13 +20,13 @@ import moment from "moment";
 const Blogs = () => {
   const { search } = useLocation();
   const [allBlogs, setAllBlogs] = useState([]);
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
 
   const getBlogs = async () => {
     try {
       const res = await axios.get(`${Api.URL}/get_blogs/${search}`);
       setAllBlogs(res.data);
-      //  console.log(allBlogs);
+      // console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -41,6 +41,7 @@ const Blogs = () => {
       <div className="rigthmenu">
         {allBlogs.length > 0 ? (
           allBlogs.map((blog, index) => {
+            // console.log(blog.users[0].username);
             const blogImg = blog.blogImage
               ? Api.URL + "/" + blog.blogImage
               : "/images/blank-blogpic.jpg";
@@ -58,7 +59,7 @@ const Blogs = () => {
                   <CardBody>
                     <CardTitle className="mini_blog_username">
                       <Link to={`/profile/${blog.blogOwnerId}`}>
-                        {blog.blogUsername}{" "}
+                        {blog.users[0].username}{" "}
                       </Link>
                       <Link to={`/?category=${blog.blogCategory}`}>
                         <Badge

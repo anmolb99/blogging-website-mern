@@ -73,13 +73,14 @@ const Profile = ({ match }) => {
         token: token,
       };
 
-      const res = await axios.post(`${Api.URL}/logout/`, data);
+      const res = await axios.post(`${Api.URL}/logout `, data);
 
       console.log(res);
 
       if (res.status === 200) {
-        cookies.remove("token");
         cookies.remove("uid");
+        cookies.remove("token");
+
         dispatch({ signinStatus: !signinStatus });
         history.push("/signin");
         console.log("log out success");
@@ -137,7 +138,7 @@ const Profile = ({ match }) => {
             userBlogs.map((blogs, index) => {
               const blogImg = blogs.blogImage
                 ? Api.URL + "/" + blogs.blogImage
-                : "/images/blank-profile.png";
+                : "/images/blank-blogpic.jpg";
               return (
                 <div className="particular_blog" key={index}>
                   <Card>

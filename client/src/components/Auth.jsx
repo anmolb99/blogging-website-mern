@@ -74,11 +74,9 @@ const Auth = () => {
         if (res.status === 201) {
           window.alert("Login successfully");
           cookies.set("token", res.data.token, {
-            path: "/",
             expires: new Date(Date.now() + 2592000000),
           });
           cookies.set("uid", res.data.uid, {
-            path: "/",
             expires: new Date(Date.now() + 2592000000),
           });
 

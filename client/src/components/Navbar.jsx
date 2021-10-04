@@ -27,8 +27,8 @@ const NavTop = () => {
 
     if (token.jwt) {
       try {
-        const res = await axios.post(`${Api.URL}/get_username/`, token);
-        console.log(res);
+        const res = await axios.post(`${Api.URL}/get_username`, token);
+        // console.log(res);
         setUser(res.data);
       } catch (error) {
         console.log(error);

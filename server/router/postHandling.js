@@ -4,6 +4,7 @@ const multer = require("multer");
 const fs = require("fs-extra");
 const Blog = require("../models/blogSchema");
 const authentication = require("../middleware/authentication");
+const User = require("../models/userSchema");
 
 multer({
   limits: { fieldSize: 25 * 1024 * 1024 },
@@ -37,7 +38,6 @@ router.post("/post_blog", blogUpload.single("BLOGPOST"), (req, res) => {
       blogDescription: req.body.blogDescription,
       blogCategory: req.body.blogCategory,
       blogOwnerId: req.body.blogOwnerId,
-      blogUsername: req.body.blogUsername,
     };
     const post = new Blog(data);
     post
@@ -116,16 +116,92 @@ router.delete("/delete_blog/:id", async (req, res) => {
 
 router.get("/get_blogs", async (req, res) => {
   const { category } = req.query;
-  let data;
+  // let data;
+  // try {
+  //   if (category) {
+  //     data = await Blog.find({ blogCategory: category }).sort({ blogTime: -1 });
+  //   } else {
+  //     data = await Blog.find({}).sort({ blogTime: -1 });
+  //   }
+  //   res.status(200).json(data);
+  // } catch (err) {
+  //   console.log("error while getting blogs is ", err);
+  // }
+
   try {
     if (category) {
-      data = await Blog.find({ blogCategory: category }).sort({ blogTime: -1 });
+      Blog.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            as: "users",
+            let: { myId: "$blogOwnerId" },
+            pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$myId"] } } }],
+          },
+        },
+        category !== "" ? { $match: { blogCategory: category } } : null,
+
+        { $sort: { blogTime: -1 } },
+        {
+          $project: {
+            blogOwnerId: 1,
+            blogTitle: 1,
+            blogDescription: 1,
+            blogImage: 1,
+            blogCategory: 1,
+            blogTime: 1,
+            blogURL: 1,
+            _id: 1,
+            users: 1,
+          },
+        },
+      ]).exec((err, result) => {
+        if (err) {
+          res.json({ status: 0 });
+          console.log(err);
+        }
+        if (result) {
+          res.status(200).json(result);
+        }
+      });
     } else {
-      data = await Blog.find({}).sort({ blogTime: -1 });
+      Blog.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            as: "users",
+            let: { myId: "$blogOwnerId" },
+            pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$myId"] } } }],
+          },
+        },
+
+        { $sort: { blogTime: -1 } },
+        {
+          $project: {
+            blogOwnerId: 1,
+            blogTitle: 1,
+            blogDescription: 1,
+            blogImage: 1,
+            blogCategory: 1,
+            blogTime: 1,
+            blogURL: 1,
+            _id: 1,
+            users: 1,
+          },
+        },
+      ]).exec((err, result) => {
+        if (err) {
+          res.json({ status: 0 });
+          console.log(err);
+        }
+        if (result) {
+          // console.log(result);
+          res.status(200).json(result);
+        }
+      });
     }
-    res.status(200).json(data);
-  } catch (err) {
-    console.log("error while getting blogs is ", err);
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -133,7 +209,9 @@ router.post("/particular_blog/:id", async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
 
-    res.status(200).json(blog);
+    const user = await User.findById(blog.blogOwnerId);
+
+    res.status(200).json({ blog: blog, user: user });
   } catch (error) {
     console.log(error);
   }
