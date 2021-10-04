@@ -4,7 +4,7 @@ import { Button, Alert, Stack } from "@mui/material";
 import { Api } from "../API/Api";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import { UserContext } from "../App";
 
 const Auth = () => {
@@ -13,7 +13,7 @@ const Auth = () => {
     dispatch,
   } = useContext(UserContext);
   const history = useHistory();
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   const [signupData, setSignupData] = useState({
     username: "",
@@ -73,12 +73,16 @@ const Auth = () => {
 
         if (res.status === 201) {
           window.alert("Login successfully");
-          cookies.set("token", res.data.token, {
-            expires: new Date(Date.now() + 2592000000),
-          });
-          cookies.set("uid", res.data.uid, {
-            expires: new Date(Date.now() + 2592000000),
-          });
+
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("uid", res.data.uid);
+
+          // cookies.set("token", res.data.token, {
+          //   expires: new Date(Date.now() + 2592000000),
+          // });
+          // cookies.set("uid", res.data.uid, {
+          //   expires: new Date(Date.now() + 2592000000),
+          // });
 
           history.push("/");
           // console.log(res.data);

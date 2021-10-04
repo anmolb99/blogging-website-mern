@@ -3,7 +3,7 @@ import { Navbar } from "reactstrap";
 import Button from "@mui/material/Button";
 import "../style/navbar.css";
 import { Link } from "react-router-dom";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import axios from "axios";
 import { Api } from "../API/Api";
 import { Tooltip } from "@mui/material";
@@ -15,12 +15,13 @@ const NavTop = () => {
     dispatch,
   } = useContext(UserContext);
   // console.log(signinStatus);
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const [user, setUser] = useState({});
 
   const getUsername = async () => {
     const token = {
-      jwt: cookies.get("token"),
+      // jwt: cookies.get("token"),
+      jwt: localStorage.getItem("token"),
     };
 
     console.log("token", token);

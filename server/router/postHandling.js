@@ -92,7 +92,7 @@ router.put(
 
       const updatedBlog = await blog.save();
 
-      console.log(updatedBlog);
+      // console.log(updatedBlog);
       res.status(200).json(updatedBlog);
     } catch (error) {
       console.log(error);

@@ -5,12 +5,12 @@ import { Button } from "@mui/material";
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 import axios from "axios";
 import { Api } from "../API/Api";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import { useHistory } from "react-router";
 import NavTop from "./Navbar";
 
 const EditBlog = ({ match }) => {
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const history = useHistory();
 
   const [showImg, setShowImg] = useState("");
@@ -74,7 +74,8 @@ const EditBlog = ({ match }) => {
 
   const getBlogData = async () => {
     const token = {
-      jwt: cookies.get("token"),
+      // jwt: cookies.get("token"),
+      jwt: localStorage.getItem("token"),
     };
     try {
       const res = await axios.post(

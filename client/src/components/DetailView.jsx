@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { Api } from "../API/Api";
 import moment from "moment";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 
 import {
   Dialog,
@@ -22,7 +22,7 @@ import NavTop from "./Navbar";
 
 const DetailView = ({ match }) => {
   const [impActions, setImpActions] = useState(false);
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const [open, setOpen] = React.useState(false);
   const [blog, setBlog] = useState({});
   const [blogAdmin, setBlogAdmin] = useState({});
@@ -39,9 +39,11 @@ const DetailView = ({ match }) => {
 
   const getBlog = async () => {
     const token = {
-      jwt: cookies.get("token"),
+      // jwt: cookies.get("token"),
+      jwt: localStorage.getItem("token"),
     };
-    const rootId = cookies.get("uid");
+    // const rootId = cookies.get("uid");
+    const rootId = localStorage.getItem("uid");
 
     try {
       const res = await axios.post(
@@ -66,6 +68,7 @@ const DetailView = ({ match }) => {
       setOpen(false);
       if (res.status === 200) {
         window.alert("Blog Deleted Successfuly");
+        handleClose();
         history.push("/");
       }
     } catch (error) {

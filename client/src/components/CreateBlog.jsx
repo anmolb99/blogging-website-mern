@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import { Button } from "@mui/material";
 import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
 import NavTop from "./Navbar";
@@ -25,12 +25,13 @@ const CreateBlog = () => {
   const [userData, setUserData] = useState({});
 
   const history = useHistory();
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   const CreateBlogPage = async () => {
     try {
       const data = {
-        jwt: cookies.get("token"),
+        // jwt: cookies.get("token"),
+        jwt: localStorage.getItem("token"),
       };
       const res = await axios.post(`${Api.URL}/create_blog_page`, data);
       if (res) {

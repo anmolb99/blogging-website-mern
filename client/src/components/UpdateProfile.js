@@ -16,7 +16,7 @@ import "../style/updateprofile.css";
 import { Label } from "reactstrap";
 import axios from "axios";
 import { Api } from "../API/Api";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import { UserContext } from "../App";
 
 export default function FormDialog({ uid, uname, profilepic }) {
@@ -24,7 +24,7 @@ export default function FormDialog({ uid, uname, profilepic }) {
     state: { profileUpdateStatus },
     dispatch,
   } = useContext(UserContext);
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   const [showImg, setShowImg] = useState("");
   const [open, setOpen] = React.useState(false);

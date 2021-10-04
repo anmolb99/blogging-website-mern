@@ -20,7 +20,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import axios from "axios";
 import { Api } from "../API/Api";
 import UpdateProfile from "./UpdateProfile";
@@ -32,7 +32,7 @@ const Profile = ({ match }) => {
     dispatch,
   } = useContext(UserContext);
 
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const history = useHistory();
 
   const [userData, setUserData] = useState({});
@@ -55,7 +55,10 @@ const Profile = ({ match }) => {
       setUserData(res.data.user);
       setUserBlogs(res.data.blogs);
 
-      if (cookies.get("uid") === res.data.user._id) {
+      // if (cookies.get("uid") === res.data.user._id) {
+      //   setImpActions(true);
+      // }
+      if (localStorage.getItem("uid") === res.data.user._id) {
         setImpActions(true);
       }
     } catch (error) {
@@ -65,8 +68,10 @@ const Profile = ({ match }) => {
 
   const logoutUser = async () => {
     try {
-      const uid = cookies.get("uid");
-      const token = cookies.get("token");
+      // const uid = cookies.get("uid");
+      // const token = cookies.get("token");
+      const uid = localStorage.getItem("uid");
+      const token = localStorage.getItem("token");
 
       const data = {
         uid: uid,
@@ -78,8 +83,11 @@ const Profile = ({ match }) => {
       console.log(res);
 
       if (res.status === 200) {
-        cookies.remove("uid");
-        cookies.remove("token");
+        // cookies.remove("uid");
+        // cookies.remove("token");
+
+        localStorage.removeItem("uid");
+        localStorage.removeItem("token");
 
         dispatch({ signinStatus: !signinStatus });
         history.push("/signin");
